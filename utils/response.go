@@ -30,7 +30,6 @@ func CheckError(w http.ResponseWriter, err error) {
 	result.Code = 1
 	result.Data = nil
 	bytes, _ := json.Marshal(result)
-
 	io.WriteString(w, string(bytes))//响应页面
 }
 
