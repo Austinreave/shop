@@ -8,9 +8,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func GetEquipmentList(r *http.Request, offset string, psize string) ([]map[string]interface{}, error) {
+func GetEquipmentList(r *http.Request, offset string, psize string, conditions string ) ([]map[string]interface{}, error) {
 
-	sql := fmt.Sprintf("SELECT * FROM ecm_equipment LIMIT "+offset+","+psize+"")
+	sql := fmt.Sprintf("SELECT * FROM ecm_equipment "+conditions+" LIMIT "+offset+","+psize+"")
 	
 	d, err := utils.QueryArrays(database.DbConn, sql)
 

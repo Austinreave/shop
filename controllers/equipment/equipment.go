@@ -12,11 +12,15 @@ func GetList(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	offset, psize, err := utils.GetPageParam(r)
 
+	w := []string{"equipment_name","user_name"}
+
+	conditions, err := utils.GetSearchParam(r,w...)
+
 	if err != nil {
 		utils.CheckError(w, err)
 	}
 
-	d,err := handle.GetEquipmentList(r, offset.(string), psize.(string))
+	d,err := handle.GetEquipmentList(r, offset.(string), psize.(string),conditions.(string))
 
 	if err != nil{
 		utils.CheckError(w, errors.New("获取失败"))
