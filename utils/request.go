@@ -5,7 +5,6 @@ import (
  	"io/ioutil"
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
-	"fmt"
 )
 
 func FindParam(r *http.Request, s ...string) ([]interface{}, error) {
@@ -50,34 +49,23 @@ func GetOneParam(p httprouter.Params) (interface{}, error) {
 }
 
 
-func GetPageParam(r *http.Request) (interface{}, interface{} ,error) {
+func GetPageParam(r *http.Request) (interface{}, interface{}, interface{},error) {
 
 	offset :=r.Form["offset"][0]
 
 	psize :=r.Form["psize"][0]
 
+	name := r.Form["name"][0]
+
 	if offset == "" {
-		return nil, nil,errors.New("parameter error")
+		return nil, nil, nil, errors.New("parameter error")
 	}
-	if psize == "" {
-		return nil, nil,errors.New("parameter error")
-	}
-
-	return offset, psize, nil
-}
-
-
-func GetSearchParam(r *http.Request,s ...string ) (interface{},error) {
 	
-	body, _ := ioutil.ReadAll(r.Body)
-	h := make(map[string]interface{}, 0)
-	err := json.Unmarshal(body, &h)
+	if psize == "" {
+		return nil, nil, nil, errors.New("parameter error")
+	}
 
-	fmt.Println(h)
-	fmt.Println(err)
-	return nil, nil
-
-
+	return offset, psize, name, nil
 }
 
 

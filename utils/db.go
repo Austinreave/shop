@@ -9,7 +9,6 @@ func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interf
 
 	rows, err := db.Query(q, args...)
 
-
 	if err != nil {
 		return nil, err
 	}

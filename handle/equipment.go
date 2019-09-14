@@ -6,12 +6,17 @@ import (
 	"shop/database"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"strings"
 )
 
-func GetEquipmentList(r *http.Request, offset string, psize string, conditions string ) ([]map[string]interface{}, error) {
+func GetEquipmentList(r *http.Request, offset string, psize string, equipment_name string) ([]map[string]interface{}, error) {
 
-	sql := fmt.Sprintf("SELECT * FROM ecm_equipment "+conditions+" LIMIT "+offset+","+psize+"")
-	
+	sql := fmt.Sprintf("SELECT * FROM ecm_equipment ?continues LIMIT "+offset+","+psize+"")
+
+	if equipment_name != ""{
+		sql = strings.Replace(sql, "?continues", "WHERE equipment_name like '%"+equipment_name+"%'", -1)
+	}
+
 	d, err := utils.QueryArrays(database.DbConn, sql)
 
 	if err != nil {
