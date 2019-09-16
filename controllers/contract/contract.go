@@ -19,13 +19,13 @@ func AccountCreatePerson(w http.ResponseWriter, r *http.Request, p httprouter.Pa
 		return
 	}
 
-	d,err := handle.AccountCreatePerson(r, p, param)
+	handle.AccountCreatePerson(param)
 
-	if err != nil{
-		utils.CheckError(w, errors.New("获取失败"))
-		return
-	}
+	// if err != nil{
+	// 	utils.CheckError(w, errors.New("获取失败"))
+	// 	return
+	// }
 
-	utils.Success(w, d)
+	// utils.Success(w, d)
 
 }

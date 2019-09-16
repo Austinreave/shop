@@ -16,8 +16,8 @@ const (
 
 //e签宝
 const(
-    PROJECT_ID => "4438758767"
-    PROJECT_SECRET => "cc7fb6e1278990edf87f3e4f0f9c3a51"
-    API_HOST => "https://smlo.tsign.cn/opentreaty-service/"
-    AddPersonUrl = API_HOST+"account/create/person"//创建个人账户地址
+    PROJECT_ID = "4438758767"
+    PROJECT_SECRET = "cc7fb6e1278990edf87f3e4f0f9c3a51"
+    API_HOST = "https://smlo.tsign.cn/opentreaty-service/"
+    AddPersonUrl = API_HOST+"account/create/person" //创建个人账户地址
 )
