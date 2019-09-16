@@ -21,5 +21,10 @@ func Loading(router *httprouter.Router) *httprouter.Router {
 	router.POST("/file",files.UploadFile)
 	router.ServeFiles("/static/*filepath",http.Dir(config.FILE_DIR))
 
+	//e签宝
+	router.POST("/contract/account_create_person",contract.AccountCreatePerson)//创建个人账号
+
+
+
 	return router
 }

@@ -67,3 +67,24 @@ func ExecuteSQL(db *sql.DB, q string, args ...interface{}) (sql.Result, error) {
 	return res, err
 }
 
+
+func HttpPostData(){
+	//模拟Post请求
+	$return_content = $this->http_post_data($this->addPersonUrl,$data,$this->projectID,$this->projectSecret);
+	function http_post_data($url, $data, $projectid, $projectSecret) {
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_POST, 1);
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  // 跳过检查
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);  // 跳过检查
+	    curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Tsign-Open-App-Id:".$projectid, "X-Tsign-Open-App-Secret:".$projectSecret, "Content-Type:application/json" ));
+	    ob_start();
+	    curl_exec($ch);
+	    $return_content = ob_get_contents();
+	    ob_end_clean();
+	    $return_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	    return array($return_code, $return_content);
+	}
+}
+
