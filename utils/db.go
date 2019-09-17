@@ -5,7 +5,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"net/http"
 	"strings"
-	"fmt"
  	"io/ioutil"
 	"encoding/json"
 	"shop/config"
@@ -74,9 +73,10 @@ func ExecuteSQL(db *sql.DB, q string, args ...interface{}) (sql.Result, error) {
 }
 
 
-func HttpPostData(data interface{}){
+func HttpPostData(data map[string]interface{}) (map[string]interface{}, error){
 
     byte, _ := json.Marshal(data)
+
     req, _ := http.NewRequest("POST", config.AddPersonUrl, strings.NewReader(string(byte)))
 
     req.Header.Add("X-Tsign-Open-App-Id", config.PROJECT_ID)
@@ -85,15 +85,18 @@ func HttpPostData(data interface{}){
 
     resp, err := (&http.Client{}).Do(req)	
 
-    if err != nil {
-  		 fmt.Println(err)
-    }
+	if err != nil {
+		return nil, err
+	}
 
     defer resp.Body.Close()
 
-    respByte, _ := ioutil.ReadAll(resp.Body)
+    body, _ := ioutil.ReadAll(resp.Body)
 
-    fmt.Println(string(respByte))
+    temp := make(map[string]interface{}, 0)
+
+	err = json.Unmarshal(body, &temp)
+    return temp,err
 
 }
 

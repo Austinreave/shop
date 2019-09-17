@@ -7,6 +7,31 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+func AcceptData(r *http.Request, s ...string) (map[string]interface{}, error) {
+
+	body, _ := ioutil.ReadAll(r.Body)
+
+	temp := make(map[string]interface{}, 0)
+
+	data := make(map[string]interface{}, 0)
+
+	err := json.Unmarshal(body, &temp)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//提取需要的数据
+	for _, v := range s {
+		if temp[v] == nil {
+			return nil, errors.New(""+v+": parameter acquisition failed")
+		}
+		data[v] = temp[v]
+	}
+	return data, nil
+}
+
+
 func FindParam(r *http.Request, s ...string) ([]interface{}, error) {
 
 	body, _ := ioutil.ReadAll(r.Body)
@@ -14,6 +39,7 @@ func FindParam(r *http.Request, s ...string) ([]interface{}, error) {
 	h := make(map[string]interface{}, 0)
 
 	err := json.Unmarshal(body, &h)
+
 	if err != nil {
 		return nil, err
 	}

@@ -3,29 +3,28 @@ package contract
 import(
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"shop/handle"
+	"shop/handle/contract"
 	"shop/utils"
-	// "errors"
 )
 
 func AccountCreatePerson(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	s := []string{"name","idNo","idType"}
 
-	param, err := utils.FindParam(r, s...)
+	param, err := utils.AcceptData(r, s...)
 
 	if err != nil {
 		utils.CheckError(w, err)
 		return
 	}
 
-	handle.AccountCreatePerson(r,param)
+	d,err := contract.AccountCreatePerson(r,param)
 
-	// if err != nil{
-	// 	utils.CheckError(w, errors.New("获取失败"))
-	// 	return
-	// }
+	if err != nil{
+		utils.CheckError(w, err)
+		return
+	}
 
-	// utils.Success(w, d)
+	utils.Success(w, d)
 
 }
