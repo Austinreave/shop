@@ -2,10 +2,11 @@ package routers
 
 import(
     "github.com/julienschmidt/httprouter"
-	"shop/controllers/equipment"
-	"shop/controllers/files"
 	"shop/config"
 	"net/http"
+	"shop/controllers/equipment"
+	"shop/controllers/files"
+	"shop/controllers/contract"
 )
 
 func Loading(router *httprouter.Router) *httprouter.Router {

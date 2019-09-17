@@ -5,7 +5,7 @@ import(
 	"net/http"
 	"shop/handle"
 	"shop/utils"
-	"errors"
+	// "errors"
 )
 
 func AccountCreatePerson(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -19,7 +19,7 @@ func AccountCreatePerson(w http.ResponseWriter, r *http.Request, p httprouter.Pa
 		return
 	}
 
-	handle.AccountCreatePerson(param)
+	handle.AccountCreatePerson(r,param)
 
 	// if err != nil{
 	// 	utils.CheckError(w, errors.New("获取失败"))

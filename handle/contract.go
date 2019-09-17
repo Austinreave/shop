@@ -2,12 +2,17 @@ package handle
 import (
 	"shop/utils"
 	"net/http"
-	"shop/database"
-	"fmt"
-	"github.com/julienschmidt/httprouter"
-	"strings"
+	// "github.com/julienschmidt/httprouter"
+	// "strings"
 )
 
-func AccountCreatePerson(r *http.Request, p httprouter.Params) ([]map[string]interface{}, error) {
-	
+func AccountCreatePerson(r *http.Request, param []interface{}) ([]map[string]interface{}, error) {
+	data := make(map[string]interface{})
+
+	data["name"] = "房雨雨"
+	data["idNo"] = "130726199205122232"
+	data["idType"] = "19"
+
+	utils.HttpPostData(data)
+	return nil ,nil
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
  	"io/ioutil"
 	"encoding/json"
+	"shop/config"
 )
 
 func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interface{}, error) {
@@ -73,38 +74,26 @@ func ExecuteSQL(db *sql.DB, q string, args ...interface{}) (sql.Result, error) {
 }
 
 
-func HttpPostData(args ...interface{}){
+func HttpPostData(data interface{}){
 
-    byte, _ := json.Marshal(args)
+    byte, _ := json.Marshal(data)
+    req, _ := http.NewRequest("POST", config.AddPersonUrl, strings.NewReader(string(byte)))
 
-    req, _ := http.NewRequest("POST", "http://abced.com/" + "/user/false/lsj", strings.NewReader(string(byte)))
-    req.Header.Set("token", "00998ecf8427e")
-    resp, err := (&http.Client{}).Do(req)
+    req.Header.Add("X-Tsign-Open-App-Id", config.PROJECT_ID)
+    req.Header.Add("X-Tsign-Open-App-Secret", config.PROJECT_SECRET)
+    req.Header.Add("Content-Type","application/json")
+
+    resp, err := (&http.Client{}).Do(req)	
+
     if err != nil {
   		 fmt.Println(err)
-
     }
+
     defer resp.Body.Close()
+
     respByte, _ := ioutil.ReadAll(resp.Body)
 
-    fmt.Println(respByte)
+    fmt.Println(string(respByte))
 
-	//模拟Post请求
-	// $return_content = $this->http_post_data($this->addPersonUrl,$data,$this->projectID,$this->projectSecret);
-	// function http_post_data($url, $data, $projectid, $projectSecret) {
-	//     $ch = curl_init();
-	//     curl_setopt($ch, CURLOPT_POST, 1);
-	//     curl_setopt($ch, CURLOPT_URL, $url);
-	//     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	//     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  // 跳过检查
-	//     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);  // 跳过检查
-	//     curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Tsign-Open-App-Id:".$projectid, "X-Tsign-Open-App-Secret:".$projectSecret, "Content-Type:application/json" ));
-	//     ob_start();
-	//     curl_exec($ch);
-	//     $return_content = ob_get_contents();
-	//     ob_end_clean();
-	//     $return_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	//     return array($return_code, $return_content);
-	// }
 }
 
