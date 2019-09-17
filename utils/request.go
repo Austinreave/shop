@@ -24,7 +24,7 @@ func AcceptData(r *http.Request, s ...string) (map[string]interface{}, error) {
 	//提取需要的数据
 	for _, v := range s {
 		if temp[v] == nil {
-			return nil, errors.New(""+v+": parameter acquisition failed")
+			return nil, errors.New("parameter acquisition failed")
 		}
 		data[v] = temp[v]
 	}
