@@ -13,10 +13,10 @@ func Loading(router *httprouter.Router) *httprouter.Router {
 	
 	//设备
 	router.GET("/equipment",equipment.GetList)
-	router.GET("/equipment/:id",equipment.GetDetail)
+	router.GET("/equipment/detail",equipment.GetDetail)
 	router.POST("/equipment",equipment.Post)
 	router.PUT("/equipment",equipment.Put)
-	router.DELETE("/equipment/:id",equipment.Delete)
+	router.DELETE("/equipment",equipment.Delete)
 
 	//文件
 	router.POST("/file",files.UploadFile)
@@ -24,7 +24,6 @@ func Loading(router *httprouter.Router) *httprouter.Router {
 
 	//e签宝
 	router.POST("/contract/account_create_person",contract.AccountCreatePerson)//创建个人账号
-
 
 
 	return router

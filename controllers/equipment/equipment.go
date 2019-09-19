@@ -5,21 +5,23 @@ import(
 	"net/http"
 	"shop/handle"
 	"shop/utils"
-	"errors"
 )
 
 func GetList(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
-	offset, psize, name, err := utils.GetPageParam(r)
+	s := []string{"offset","psize"}
+
+	param, err := utils.FindParam(r,s...)
 
 	if err != nil {
 		utils.CheckError(w, err)
+		return
 	}
 
-	d,err := handle.GetEquipmentList(r, offset.(string), psize.(string),name.(string))
+	d,err := handle.GetEquipmentList(r, param)
 
 	if err != nil{
-		utils.CheckError(w, errors.New("获取失败"))
+		utils.CheckError(w, err)
 		return
 	}
 	utils.Success(w, d)
@@ -27,16 +29,17 @@ func GetList(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 func GetDetail(w http.ResponseWriter, r *http.Request, p httprouter.Params){
 
-	id, err := utils.GetOneParam(p)
+	equipment_id, err := utils.FindOneParam(r,"equipment_id")
+
 
 	if err != nil {
 		utils.CheckError(w, err)
 	}
 
-	d,err := handle.GetEquipment(r, p, id.(string))
+	d,err := handle.GetEquipment(r, p, equipment_id)
 
 	if err != nil{
-		utils.CheckError(w, errors.New("获取失败"))
+		utils.CheckError(w, err)
 		return
 	}
 	utils.Success(w, d)
@@ -57,7 +60,7 @@ func Post(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	d,err := handle.AddEquipment(r, p, param)
 
 	if err != nil{
-		utils.CheckError(w, errors.New("添加失败"))
+		utils.CheckError(w, err)
 		return
 	}
 
@@ -79,7 +82,7 @@ func Put(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	d,err := handle.UpdateEquipment(r, p, param)
 
 	if err != nil{
-		utils.CheckError(w, errors.New("修改失败"))
+		utils.CheckError(w, err)
 		return
 	}
 
@@ -89,16 +92,17 @@ func Put(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 func Delete(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
-	id, err := utils.GetOneParam(p)
+	equipment_id, err := utils.FindOneParam(r,"equipment_id")
 
 	if err != nil {
 		utils.CheckError(w, err)
+		return
 	}
 
-	d,err := handle.DeleteEquipment(r, p, id.(string))
+	d,err := handle.DeleteEquipment(r, p, equipment_id)
 
 	if err != nil {
-		utils.CheckError(w, errors.New("删除失败"))
+		utils.CheckError(w, err)
 		return
 	}
 

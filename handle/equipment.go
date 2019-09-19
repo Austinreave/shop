@@ -6,18 +6,13 @@ import (
 	"shop/database"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"strings"
 )
 
-func GetEquipmentList(r *http.Request, offset string, psize string, equipment_name string) ([]map[string]interface{}, error) {
+func GetEquipmentList(r *http.Request, param []interface{}) ([]map[string]interface{}, error) {
 
-	sql := fmt.Sprintf("SELECT * FROM ecm_equipment ?continues LIMIT "+offset+","+psize+"")
+	sql := fmt.Sprintf("SELECT * FROM ecm_equipment LIMIT ?,?")
 
-	if equipment_name != ""{
-		sql = strings.Replace(sql, "?continues", "WHERE equipment_name like '%"+equipment_name+"%'", -1)
-	}
-
-	d, err := utils.QueryArrays(database.DbConn, sql)
+	d, err := utils.QueryArrays(database.DbConn, sql, param...)
 
 	if err != nil {
 		return nil, err
@@ -26,11 +21,11 @@ func GetEquipmentList(r *http.Request, offset string, psize string, equipment_na
 	return d, nil
 }
 
-func GetEquipment(r *http.Request, p httprouter.Params,id string) ([]map[string]interface{}, error) {
+func GetEquipment(r *http.Request, p httprouter.Params,equipment_id interface{}) ([]map[string]interface{}, error) {
 
-	sql := fmt.Sprintf("SELECT * FROM ecm_equipment WHERE equipment_id = "+id+"")
+	sql := fmt.Sprintf("SELECT * FROM ecm_equipment WHERE equipment_id = ?")
 
-	d, err := utils.QueryArrays(database.DbConn, sql)
+	d, err := utils.QueryArrays(database.DbConn, sql, equipment_id)
 
 	if err != nil {
 		return nil, err
@@ -72,11 +67,11 @@ func UpdateEquipment(r *http.Request, p httprouter.Params, param []interface{}) 
 	return result.RowsAffected()
 }
 
-func DeleteEquipment(r *http.Request, p httprouter.Params, id string) (int64, error) {
+func DeleteEquipment(r *http.Request, p httprouter.Params, equipment_id interface{}) (int64, error) {
 
 	sql := fmt.Sprintf("DELETE FROM ecm_equipment WHERE equipment_id = ?")
 
-	result, err := utils.ExecuteSQL(database.DbConn, sql, id)
+	result, err := utils.ExecuteSQL(database.DbConn, sql, equipment_id)
 
 	if err != nil {
 

@@ -4,7 +4,7 @@ import (
  	"errors"
  	"io/ioutil"
 	"encoding/json"
-	"github.com/julienschmidt/httprouter"
+	"shop/languages"
 )
 
 func AcceptData(r *http.Request, s ...string) (map[string]interface{}, error) {
@@ -24,7 +24,7 @@ func AcceptData(r *http.Request, s ...string) (map[string]interface{}, error) {
 	//提取需要的数据
 	for _, v := range s {
 		if temp[v] == nil {
-			return nil, errors.New("parameter acquisition failed")
+			return nil, errors.New(languages.ParameterAcquisitionFailed)
 		}
 		data[v] = temp[v]
 	}
@@ -45,13 +45,13 @@ func FindParam(r *http.Request, s ...string) ([]interface{}, error) {
 	}
 	
 	if len(s) < 0 {
-		return nil, errors.New("slice len is 0")
+		return nil, errors.New(languages.SliceError)
 	}
 
 	param := s[0]
 
 	if _, ok := h[param]; !ok {
-		return nil, errors.New("slices find not param")
+		return nil, errors.New(languages.SliceFindError)
 	}
 
 	var temp []interface{}
@@ -63,36 +63,25 @@ func FindParam(r *http.Request, s ...string) ([]interface{}, error) {
 	return temp, nil
 }
 
-func GetOneParam(p httprouter.Params) (interface{}, error) {
+func FindOneParam(r *http.Request, s string) (interface{}, error){
 
-	param := p.ByName("id")
+	body, _ := ioutil.ReadAll(r.Body)
 
-	if param == "" {
-		return nil, errors.New("parameter error")
+	h := make(map[string]interface{}, 0)
+
+	err := json.Unmarshal(body, &h)
+
+	if err != nil {
+		return nil, err
 	}
 
-	return param, nil
-}
-
-
-func GetPageParam(r *http.Request) (interface{}, interface{}, interface{},error) {
-
-	offset :=r.Form["offset"][0]
-
-	psize :=r.Form["psize"][0]
-
-	name := r.Form["name"][0]
-
-	if offset == "" {
-		return nil, nil, nil, errors.New("parameter error")
+	if len(s) < 0 {
+		return nil, errors.New(languages.SliceError)
 	}
 	
-	if psize == "" {
-		return nil, nil, nil, errors.New("parameter error")
-	}
-
-	return offset, psize, name, nil
+	return h[s], nil
 }
+
 
 
 
