@@ -10,7 +10,7 @@ import (
 
 func GetEquipmentList(r *http.Request, param []interface{}) ([]map[string]interface{}, error) {
 
-	sql := fmt.Sprintf("SELECT * FROM ecm_equipment LIMIT ?,?")
+	sql := "SELECT * FROM ecm_equipment WHERE user_name LIKE CONCAT('%',?,'%') OR equipment_name LIKE CONCAT('%',?,'%') LIMIT ?,?"
 
 	d, err := utils.QueryArrays(database.DbConn, sql, param...)
 

@@ -1,6 +1,7 @@
 package languages
 
 var(
+	
 	ValidationFails = "validation fails"
 	FileTypeError = "file type error"
 	ParameterAcquisitionFailed = "parameter acquisition failed"

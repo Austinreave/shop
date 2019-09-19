@@ -9,7 +9,7 @@ import(
 
 func GetList(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
-	s := []string{"offset","psize"}
+	s := []string{"user_name","equipment_name","offset","psize"}
 
 	param, err := utils.FindParam(r,s...)
 
