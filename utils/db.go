@@ -8,6 +8,9 @@ import (
  	"io/ioutil"
 	"encoding/json"
 	"shop/config"
+	// "io"
+	"os"
+	"fmt"
 )
 
 func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interface{}, error) {
@@ -74,21 +77,6 @@ func ExecuteSQL(db *sql.DB, q string, args ...interface{}) (sql.Result, error) {
 	return res, err
 }
 
-
-func GetUploadurl(filePath,fileName,url string){
-
-    // $fileSize = strlen(file_get_contents(filePath));
-    // $contentType = "application/pdf";
-    // $contentMd5 = $this->getContentBase64Md5(filePath);
-    // $arr = array('fileName'=>$fileName,'fileSize'=>$fileSize,'contentType'=>$contentType,'contentMd5'=>$contentMd5);
-    // //将数组转成json字符串（JSON_UNESCAPED_SLASHES 此参数是为了不让application/pdf 中的“/”被转义掉）
-    // $data = json_encode($arr,JSON_UNESCAPED_SLASHES);
-    // $result = $this->doPost(Url,$data,config.PROJECT_ID,config.PROJECT_SECRET);
-    // return $result;
-}
-
-
-
 func HttpPostData(url string,data map[string]interface{}) (map[string]interface{}, error){
 
     byte, _ := json.Marshal(data)
@@ -116,4 +104,47 @@ func HttpPostData(url string,data map[string]interface{}) (map[string]interface{
     return temp,err
 
 }
+
+func GetUploadurl(url string, data map[string]interface{}) (map[string]interface{}, error) {
+
+	// fileName := "test"
+	filePath := "./utils/test.pdf"
+	// contentType := "application/pdf"
+
+	f, err := os.Open(filePath)
+	if err != nil {
+	   return nil, err
+	}
+
+ 	defer f.Close()
+
+	content, err:= ioutil.ReadAll(f)
+
+	if err != nil {
+	   return nil, err
+	}
+
+	fileSize := len(content)
+
+	fmt.Println(fileSize)
+
+    contentMd5, err := GetContentBase64Md5(filePath)
+
+	if err != nil {
+	   return nil, err
+	}
+
+ 	fmt.Println(contentMd5)
+ 	
+    // $arr = array('fileName'=>$fileName,'fileSize'=>$fileSize,'contentType'=>$contentType,'contentMd5'=>$contentMd5);
+    // //将数组转成json字符串（JSON_UNESCAPED_SLASHES 此参数是为了不让application/pdf 中的“/”被转义掉）
+    // $data = json_encode($arr,JSON_UNESCAPED_SLASHES);
+    // $result = $this->doPost(Url,$data,config.PROJECT_ID,config.PROJECT_SECRET);
+    // return $result;
+    return nil, nil
+
+}
+
+
+
 

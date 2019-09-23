@@ -77,14 +77,15 @@ func SilentSign(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 func UploadTemplateFile(w http.ResponseWriter, r *http.Request, p httprouter.Params){
 
 	s := []string{"filePath","fileName"}
-	param, err := utils.GetUploadurl(r, s...)
 
+	param, err := utils.AcceptData(r, s...)
+	
 	if err != nil {
 		utils.CheckError(w, err)
 		return
 	}
 
-	d,err := handle.SilentSign(r,param)
+	d,err := handle.UploadTemplateFile(r,param)
 
 	if err != nil{
 		utils.CheckError(w, err)

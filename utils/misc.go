@@ -5,7 +5,9 @@ import (
  	"encoding/hex" //hex包实现了16进制字符表示的编解码
  	"errors"
  	"shop/languages"
- 	"fmt"
+ 	"io"
+ 	"encoding/base64"
+ 	"os"
 )
 
 func md5V(str string) string  {
@@ -27,6 +29,31 @@ func VerifyFileType(filetype string) error {
 			return errors.New(languages.FileTypeError)//使用字符串创建一个错误,请类比fmt包的Errorf方法，差不多可以认为是New(fmt.Sprintf(...))
 	}
 
+}
+
+
+func GetContentBase64Md5(filePath string) (interface{}, error) {
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	hash := md5.New()
+
+	if _, err = io.Copy(hash, file); err != nil {
+		return nil, err
+	}
+
+	hashInBytes := hash.Sum(nil)[:16]
+
+	md5Str := hex.EncodeToString(hashInBytes)
+
+    //计算文件的Content-MD5
+    contentBase64Md5 := base64.StdEncoding.EncodeToString([]byte(md5Str))
+    
+    return contentBase64Md5,nil
 }
 
 

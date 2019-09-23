@@ -61,7 +61,7 @@ func SilentSign(r *http.Request, param map[string]interface{}) (interface{}, err
 
 func UploadTemplateFile(r *http.Request, param map[string]interface{}) (interface{}, error){
 
-	data, err :=utils.GetUploadurl(config.SilentSignUrl,param)
+	data, err := utils.GetUploadurl(config.SilentSignUrl,param)
 
 	if err != nil {
 		return nil, err
