@@ -75,11 +75,25 @@ func ExecuteSQL(db *sql.DB, q string, args ...interface{}) (sql.Result, error) {
 }
 
 
-func HttpPostData(data map[string]interface{}) (map[string]interface{}, error){
+func GetUploadurl(filePath,fileName,url string){
+
+    // $fileSize = strlen(file_get_contents(filePath));
+    // $contentType = "application/pdf";
+    // $contentMd5 = $this->getContentBase64Md5(filePath);
+    // $arr = array('fileName'=>$fileName,'fileSize'=>$fileSize,'contentType'=>$contentType,'contentMd5'=>$contentMd5);
+    // //将数组转成json字符串（JSON_UNESCAPED_SLASHES 此参数是为了不让application/pdf 中的“/”被转义掉）
+    // $data = json_encode($arr,JSON_UNESCAPED_SLASHES);
+    // $result = $this->doPost(Url,$data,config.PROJECT_ID,config.PROJECT_SECRET);
+    // return $result;
+}
+
+
+
+func HttpPostData(url string,data map[string]interface{}) (map[string]interface{}, error){
 
     byte, _ := json.Marshal(data)
 
-    req, _ := http.NewRequest("POST", config.AddPersonUrl, strings.NewReader(string(byte)))
+    req, _ := http.NewRequest("POST", url, strings.NewReader(string(byte)))
 
     req.Header.Add("X-Tsign-Open-App-Id", config.PROJECT_ID)
     req.Header.Add("X-Tsign-Open-App-Secret", config.PROJECT_SECRET)

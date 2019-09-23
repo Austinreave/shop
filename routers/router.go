@@ -24,7 +24,9 @@ func Loading(router *httprouter.Router) *httprouter.Router {
 
 	//e签宝
 	router.POST("/contract/account_create_person",contract.AccountCreatePerson)//创建个人账号
-
+	router.POST("/contract/create_organize_common",contract.CreateOrganizeCommon)//创建企业账号
+	router.POST("/contract/silent_sign",contract.SilentSign)//创建企业账号
+	router.POST("/contract/upload_template_file",contract.UploadTemplateFile)//上传文件模板
 
 	return router
 }
