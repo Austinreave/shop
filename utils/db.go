@@ -12,6 +12,8 @@ import (
 
 func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interface{}, error) {
 
+
+	//func (db *DB) Query(query string, args ...interface{}) (*Rows, error) Query执行一次查询，返回多行结果（即Rows），一般用于执行select命令。参数args表示query中的占位参数
 	rows, err := db.Query(q, args...)
 
 	if err != nil {
@@ -19,13 +21,13 @@ func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interf
 	}
 
 	// Get column names
-	columns, err := rows.Columns()
+	columns, err := rows.Columns()//func (rs *Rows) Columns() ([]string, error) Columns返回列名。如果Rows已经关闭会返回错误
 
 	if err != nil {
 		return nil, err
 	}
 
-	values := make([]sql.RawBytes, len(columns))
+	values := make([]sql.RawBytes, len(columns))//RawBytes是一个字节切片，保管对内存的引用，为数据库自身所使用。在Scaner接口的Scan方法写入RawBytes数据后，该切片只在限次调用Next、Scan或Close方法之前合法
 
 	scanArgs := make([]interface{}, len(values))
 	
@@ -36,8 +38,8 @@ func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interf
 	// 最终要返回的data
 	data := make([]map[string]interface{}, 0)
 	// Fetch rows
-	for rows.Next() {
-		err = rows.Scan(scanArgs...)
+	for rows.Next() {//Next准备用于Scan方法的下一行结果
+		err = rows.Scan(scanArgs...)//func (rs *Rows) Scan(dest ...interface{}) error Scan将当前行各列结果填充进dest指定的各个值中
 		if err != nil {
 			panic(err.Error()) // proper error handling instead of panic in your app
 		}
