@@ -8,9 +8,9 @@ import (
  	"io/ioutil"
 	"encoding/json"
 	"shop/config"
-	// "io"
 	"os"
-	"fmt"
+	"errors"
+	"shop/languages"
 )
 
 func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interface{}, error) {
@@ -77,6 +77,7 @@ func ExecuteSQL(db *sql.DB, q string, args ...interface{}) (sql.Result, error) {
 	return res, err
 }
 
+
 func HttpPostData(url string,data map[string]interface{}) (map[string]interface{}, error){
 
     byte, _ := json.Marshal(data)
@@ -100,16 +101,56 @@ func HttpPostData(url string,data map[string]interface{}) (map[string]interface{
     temp := make(map[string]interface{}, 0)
 
 	err = json.Unmarshal(body, &temp)
+
+	if err != nil {
+		return nil, err
+	}
 	
     return temp,err
 
 }
 
-func GetUploadurl(url string, data map[string]interface{}) (map[string]interface{}, error) {
 
-	// fileName := "test"
-	filePath := "./utils/test.pdf"
-	// contentType := "application/pdf"
+
+func SendHttpPUT(url, contentBase64Md5  string, fileContent []byte) (map[string]interface{}, error) {
+
+    req, _ := http.NewRequest("PUT", url, strings.NewReader(string(fileContent)))
+
+    req.Header.Add("Content-Type","application/pdf")
+    req.Header.Add("Content-Md5", contentBase64Md5)
+
+    resp, err := (&http.Client{}).Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+    defer resp.Body.Close()
+
+    body, _ := ioutil.ReadAll(resp.Body)
+	
+    temp := make(map[string]interface{}, 0)
+
+	err = json.Unmarshal(body, &temp)
+
+	if err != nil {
+		return nil, err
+	}
+	
+    return temp,err
+}
+
+
+
+func GetUploadurl(url string, param map[string]interface{}) (map[string]interface{}, error) {
+
+
+	filePath, ok := param["filePath"].(string)
+
+ 	if ok != true {
+	   return nil, errors.New(languages.AssertionFailure)
+	}
+
 
 	f, err := os.Open(filePath)
 	if err != nil {
@@ -118,30 +159,56 @@ func GetUploadurl(url string, data map[string]interface{}) (map[string]interface
 
  	defer f.Close()
 
-	content, err:= ioutil.ReadAll(f)
+	fileContent, err:= ioutil.ReadAll(f)
 
 	if err != nil {
 	   return nil, err
 	}
 
-	fileSize := len(content)
+	fileSize := len(fileContent)
 
-	fmt.Println(fileSize)
-
-    contentMd5, err := GetContentBase64Md5(filePath)
+    fileMd5, err := GetContentBase64Md5(filePath)
 
 	if err != nil {
 	   return nil, err
 	}
 
- 	fmt.Println(contentMd5)
- 	
-    // $arr = array('fileName'=>$fileName,'fileSize'=>$fileSize,'contentType'=>$contentType,'contentMd5'=>$contentMd5);
-    // //将数组转成json字符串（JSON_UNESCAPED_SLASHES 此参数是为了不让application/pdf 中的“/”被转义掉）
-    // $data = json_encode($arr,JSON_UNESCAPED_SLASHES);
-    // $result = $this->doPost(Url,$data,config.PROJECT_ID,config.PROJECT_SECRET);
-    // return $result;
-    return nil, nil
+ 	param["fileSize"] = fileSize
+ 	param["contentType"] = config.ContentType
+ 	param["contentMd5"] = fileMd5
+
+ 	temp, err :=HttpPostData(url,param)
+
+ 	if err != nil {
+	   return nil, err
+	}
+
+	contentMd5, ok := fileMd5.(string)
+
+
+ 	if ok != true {
+	   return nil, errors.New(languages.AssertionFailure)
+	}
+
+	data, ok := temp["data"].(map[string]interface {})
+
+ 	if ok != true {
+	   return nil, errors.New(languages.AssertionFailure)
+	}
+
+	uploadUrl, ok := data["uploadUrl"].(string)
+
+ 	if ok != true {
+	   return nil, errors.New(languages.AssertionFailure)
+	}
+
+	result, err := SendHttpPUT(uploadUrl, contentMd5, fileContent)
+
+	if err != nil {
+	   return nil, err
+	}
+
+	return result,nil
 
 }
 

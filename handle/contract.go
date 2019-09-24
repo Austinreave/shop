@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"errors"
 	"shop/config"
-	"fmt"
 )
 
 func AccountCreatePerson(r *http.Request, param map[string]interface{}) (interface{}, error) {
@@ -27,7 +26,7 @@ func AccountCreatePerson(r *http.Request, param map[string]interface{}) (interfa
 func CreateOrganizeCommon(r *http.Request, param map[string]interface{}) (interface{}, error) {
 
 	data, err :=utils.HttpPostData(config.AddOrganizeUrl,param)
-	fmt.Println(data)
+
 	if err != nil {
 		return nil, err
 	}
@@ -61,19 +60,16 @@ func SilentSign(r *http.Request, param map[string]interface{}) (interface{}, err
 
 func UploadTemplateFile(r *http.Request, param map[string]interface{}) (interface{}, error){
 
-	data, err := utils.GetUploadurl(config.SilentSignUrl,param)
+	data, err := utils.GetUploadurl(config.GetUploadurl,param)
 
 	if err != nil {
 		return nil, err
 	}
-
 	if data["errCode"].(float64) != 0 {
 		return nil,  errors.New(data["msg"].(string))
 	}
 
-	temp := data["data"]
-
-	return temp, nil
+	return nil, nil
 
 }
 

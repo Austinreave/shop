@@ -24,3 +24,8 @@ const(
     SilentSignUrl = API_HOST+"account/platform/silentsign";//设置静默签署授权地址
     GetUploadurl = API_HOST+"file/uploadurl";//获取文件直传地址
 )
+
+//文件类型
+const(
+    ContentType = "application/pdf"
+)

@@ -35,6 +35,7 @@ func VerifyFileType(filetype string) error {
 func GetContentBase64Md5(filePath string) (interface{}, error) {
 
 	file, err := os.Open(filePath)
+
 	if err != nil {
 		return nil, err
 	}
@@ -48,10 +49,8 @@ func GetContentBase64Md5(filePath string) (interface{}, error) {
 
 	hashInBytes := hash.Sum(nil)[:16]
 
-	md5Str := hex.EncodeToString(hashInBytes)
-
     //计算文件的Content-MD5
-    contentBase64Md5 := base64.StdEncoding.EncodeToString([]byte(md5Str))
+    contentBase64Md5 := base64.StdEncoding.EncodeToString(hashInBytes)
     
     return contentBase64Md5,nil
 }
