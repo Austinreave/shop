@@ -11,6 +11,7 @@ import (
 	"os"
 	"errors"
 	"shop/languages"
+	"fmt"
 )
 
 func QueryArrays(db *sql.DB, q string, args ...interface{}) ([]map[string]interface{}, error) {
@@ -110,8 +111,6 @@ func HttpPostData(url string,data map[string]interface{}) (map[string]interface{
 
 }
 
-
-
 func SendHttpPUT(url, contentBase64Md5  string, fileContent []byte) (map[string]interface{}, error) {
 
     req, _ := http.NewRequest("PUT", url, strings.NewReader(string(fileContent)))
@@ -143,7 +142,6 @@ func SendHttpPUT(url, contentBase64Md5  string, fileContent []byte) (map[string]
 
 
 func GetUploadurl(url string, param map[string]interface{}) (map[string]interface{}, error) {
-
 
 	filePath, ok := param["filePath"].(string)
 
@@ -178,6 +176,8 @@ func GetUploadurl(url string, param map[string]interface{}) (map[string]interfac
  	param["contentMd5"] = fileMd5
 
  	temp, err :=HttpPostData(url,param)
+
+ 	fmt.Println(temp)
 
  	if err != nil {
 	   return nil, err

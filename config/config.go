@@ -23,6 +23,10 @@ const(
     AddOrganizeUrl = API_HOST+"account/create/organize/common";//创建企业账户地址
     SilentSignUrl = API_HOST+"account/platform/silentsign";//设置静默签署授权地址
     GetUploadurl = API_HOST+"file/uploadurl";//获取文件直传地址
+    CreateByFileKeyUrl = API_HOST+"template/createbyfilekey";//创建模板地址
+    CreateByTemplateUrl = API_HOST+"doc/createbytemplate";//合同模板创建合同地址
+    AddProcessUrl = API_HOST+"sign/contract/addProcess";//创建合同签署流程
+    UserSignTaskUrl = API_HOST+"sign/contract/userSignTask";//发起用户自动签署
 )
 
 //文件类型
