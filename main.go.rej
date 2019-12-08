@@ -1,0 +1,9 @@
+diff a/main.go b/main.go	(rejected hunks)
+@@ -4,6 +4,7 @@
+ 	"fmt"
+ 	"shop/cmd"
+ )
++
+ func main(){
+ 
+ 	err := cmd.ShopStart()
