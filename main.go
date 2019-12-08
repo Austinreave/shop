@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"shop/cmd"
 )
+11111111
 func main(){
 
 	err := cmd.ShopStart()
