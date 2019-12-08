@@ -6,7 +6,6 @@ import(
  	"errors"
  	"shop/languages"
 )
-
 func ValidateAuth(r *http.Request) error {
 
 	md5Str := md5V(config.SecretKey)
